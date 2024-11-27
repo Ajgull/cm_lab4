@@ -1,6 +1,6 @@
 #include "constants.h"
 
-
+// Метод бисекции (дихотомии)
 vector<double> dichotomy_method() {
     vector<double> roots;
 
@@ -34,38 +34,33 @@ vector<double> dichotomy_method() {
     return roots;
 }
 
-vector<double> chord_method(double (*func)(double)) {
+// Метод хорд
+vector<double> chord_method() {
     vector<double> roots;
 
     for (double left = a; left < b; left += delta) {
         double right = left + delta;
 
-        if (func(left) * func(right) < 0) {
-            // Если есть корень между left и right, применяем метод хорд
+        if (f(left) * f(right) < 0) {
             double x0 = left;
             double x1 = right;
             double x2;
 
             while (true) {
-                // Находим новое приближение
-                x2 = x1 - func(x1) * (x1 - x0) / (func(x1) - func(x0));
+                x2 = x1 - f(x1) * (x1 - x0) / (f(x1) - f(x0));
 
-                // Проверяем условие остановки
-                if (fabs(x2 - x1) < delta || fabs(func(x2)) < delta || fabs(x2 - x0) < delta) {
+                if (fabs(x2 - x1) < delta || fabs(f(x2)) < delta || fabs(x2 - x0) < delta) {
                     break; // Условие остановки достигнуто
                 }
 
-                // Обновляем значения для следующей итерации
                 x0 = x1;
                 x1 = x2;
 
-                // Проверка выхода за пределы интервала
                 if (x2 < a || x2 > b || isnan(x2)) {
                     break; // Выход за пределы интервала
                 }
             }
 
-            // Добавляем найденный корень в вектор, избегая дубликатов
             if (find(roots.begin(), roots.end(), x2) == roots.end()) {
                 roots.push_back(x2);
             }
@@ -75,20 +70,128 @@ vector<double> chord_method(double (*func)(double)) {
     return roots;
 }
 
-void print(const vector<double>& roots) {
-    if (!roots.empty()) {
-        printf("Found roots: ");
-        for (const double root : roots) {
-            printf("%.10f ", root); // Используем %f для вывода double
+// Метод простых итераций
+vector<double> simple_iteration() {
+    vector<double> roots;
+
+    for (double left = a; left < b; left += delta) {
+        double right = left + delta;
+
+        if (f(left) * f(right) < 0) {
+            double x_n = left; // Начальное приближение
+            double x_n1;
+
+            while (true) {
+                x_n1 = f(x_n); // Вычисляем следующее приближение
+
+                if (fabs(x_n1 - x_n) < delta || fabs(f(x_n1)) < delta) {
+                    if (find(roots.begin(), roots.end(), x_n1) == roots.end()) {
+                        roots.push_back(x_n1);
+                    }
+                    break; // Выходим из цикла
+                }
+
+                x_n = x_n1; // Обновляем текущее значение
+            }
         }
-        printf("\n"); // Переход на новую строку
+    }
+
+    return roots;
+}
+
+// Метод Ньютона для нахождения всех корней
+vector<double> newton_method() {
+    vector<double> roots;
+
+    for (double left = a; left < b; left += delta) {
+        double x_n = left; // Начальное приближение
+
+        if (f(left) * f(left + delta) < 0) { // Проверяем наличие корня в интервале
+            for (int i = 0; i < 100; ++i) {
+                if (df(x_n) == 0.0)
+                    break; // Избегаем деления на ноль
+
+                double x_n1 = x_n - f(x_n) / df(x_n);
+
+                if (fabs(x_n1 - x_n) < delta && find(roots.begin(), roots.end(), x_n1) == roots.end()) {
+                    roots.push_back(x_n1); // Добавляем найденный корень
+                    break; // Выходим из цикла
+                }
+
+                x_n = x_n1; // Обновляем текущее значение
+            }
+        }
+    }
+
+    return roots;
+}
+
+// Метод секущих для нахождения всех корней
+vector<double> secant_method() {
+    vector<double> roots;
+
+    for (double left = a; left < b; left += delta) {
+        double right = left + delta;
+
+        if (f(left) * f(right) < 0) { // Проверяем наличие корня в интервале
+            double x0 = left;
+            double x1 = right;
+            double x2;
+
+            while (true) {
+                if (f(x1) == f(x0)) break; // Избегаем деления на ноль
+
+                // Вычисляем новое приближение по методу секущих
+                x2 = x1 - f(x1) * (x1 - x0) / (f(x1) - f(x0));
+
+                if (fabs(f(x2)) < delta || fabs(x2 - x1) < delta || fabs(f(x2)) < delta)
+                    break;
+
+                // Обновляем значения для следующей итерации
+                x0 = x1;
+                x1 = x2;
+
+                // Проверка выхода за пределы интервала
+                if (x2 < a || x2 > b || isnan(x2)) break;
+            }
+
+            if (find(roots.begin(), roots.end(), x2) == roots.end()) {
+                roots.push_back(x2);
+            }
+        }
+    }
+
+    return roots;
+}
+
+// Функция для вывода найденных корней
+void print(const vector<double>& roots, const string& method_name) {
+    if (!roots.empty()) {
+        cout << "Found roots using " << method_name << ": ";
+        for (const double root : roots) {
+            printf("%.4f ", root);
+        }
+        cout << endl;
+    }
+    else {
+        cout << "No roots found using " << method_name << "." << endl;
     }
 }
 
-void  first() {
-    vector<double> bisection = dichotomy_method();
-    print(bisection);
+// Основная функция для запуска методов поиска корней
+void first() {
+    vector<double> bisection_roots = dichotomy_method();
+    print(bisection_roots, "Dichotomy Method");
 
-    vector<double> chord = chord_method(f);
-    print(chord);
+    vector<double> chord_roots = chord_method();
+    print(chord_roots, "Chord Method");
+
+    vector<double> iteration_roots = simple_iteration();
+    print(iteration_roots, "Simple Iteration Method");
+
+    vector<double> newton_roots = newton_method();
+    print(newton_roots, "Newton's Method");
+
+    vector<double> secant_roots = secant_method();
+    print(secant_roots, "Secant Method");
 }

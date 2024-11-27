@@ -14,3 +14,7 @@ double f(double x) {
 	double temp = 1 - 2 * x * cos(x);
 	return temp;
 }
+
+double df(double x) {
+	return -2 * (cos(x) - x * sin(x));
+}
