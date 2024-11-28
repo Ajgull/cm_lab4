@@ -3,18 +3,13 @@
 #include <cmath>
 #include <vector>
 #include <stdio.h>
-
+#include <iomanip>
 using namespace std;
 
 const double a = 0;
 const double b = 2;
-const double delta = 0.001;
+const double delta = 0.00001;
 
-double f(double x) {
-	double temp = 1 - 2 * x * cos(x);
-	return temp;
-}
 
-double df(double x) {
-	return -2 * (cos(x) - x * sin(x));
-}
+
+

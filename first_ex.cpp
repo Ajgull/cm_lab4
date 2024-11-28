@@ -1,6 +1,18 @@
 #include "constants.h"
 
-// Метод бисекции (дихотомии)
+double f(double x) {
+    double temp = 1 - 2 * x * cos(x);
+    return temp;
+}
+
+double g(double x) {
+    return 1.0 / (2.0 * cos(x));
+}
+
+double df(double x) {
+    return -2 * (cos(x) - x * sin(x));
+}
+
 vector<double> dichotomy_method() {
     vector<double> roots;
 
@@ -34,7 +46,6 @@ vector<double> dichotomy_method() {
     return roots;
 }
 
-// Метод хорд
 vector<double> chord_method() {
     vector<double> roots;
 
@@ -70,7 +81,6 @@ vector<double> chord_method() {
     return roots;
 }
 
-// Метод простых итераций
 vector<double> simple_iteration() {
     vector<double> roots;
 
@@ -78,20 +88,20 @@ vector<double> simple_iteration() {
         double right = left + delta;
 
         if (f(left) * f(right) < 0) {
-            double x_n = left; // Начальное приближение
+            double x_n = (left + right) / 2;
             double x_n1;
 
             while (true) {
-                x_n1 = f(x_n); // Вычисляем следующее приближение
+                x_n1 = g(x_n);
 
-                if (fabs(x_n1 - x_n) < delta || fabs(f(x_n1)) < delta) {
+                if (fabs(x_n1 - x_n) < delta || fabs(cos(x_n1)) < delta) {
                     if (find(roots.begin(), roots.end(), x_n1) == roots.end()) {
                         roots.push_back(x_n1);
                     }
-                    break; // Выходим из цикла
+                    break;
                 }
 
-                x_n = x_n1; // Обновляем текущее значение
+                x_n = x_n1;
             }
         }
     }
@@ -99,14 +109,13 @@ vector<double> simple_iteration() {
     return roots;
 }
 
-// Метод Ньютона для нахождения всех корней
 vector<double> newton_method() {
     vector<double> roots;
 
     for (double left = a; left < b; left += delta) {
-        double x_n = left; // Начальное приближение
+        double x_n = left;
 
-        if (f(left) * f(left + delta) < 0) { // Проверяем наличие корня в интервале
+        if (f(left) * f(left + delta) < 0) {
             for (int i = 0; i < 100; ++i) {
                 if (df(x_n) == 0.0)
                     break; // Избегаем деления на ноль
@@ -164,7 +173,6 @@ vector<double> secant_method() {
     return roots;
 }
 
-// Функция для вывода найденных корней
 void print(const vector<double>& roots, const string& method_name) {
     if (!roots.empty()) {
         cout << "Found roots using " << method_name << ": ";
@@ -178,7 +186,6 @@ void print(const vector<double>& roots, const string& method_name) {
     }
 }
 
-// Основная функция для запуска методов поиска корней
 void first() {
     vector<double> bisection_roots = dichotomy_method();
     print(bisection_roots, "Dichotomy Method");

@@ -129,6 +129,7 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="first_ex.cpp" />
+    <ClCompile Include="second_ex.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="constants.h" />
