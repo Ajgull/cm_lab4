@@ -61,14 +61,14 @@ vector<double> chord_method() {
                 x2 = x1 - f(x1) * (x1 - x0) / (f(x1) - f(x0));
 
                 if (fabs(x2 - x1) < delta || fabs(f(x2)) < delta || fabs(x2 - x0) < delta) {
-                    break; // Условие остановки достигнуто
+                    break;
                 }
 
                 x0 = x1;
                 x1 = x2;
 
                 if (x2 < a || x2 > b || isnan(x2)) {
-                    break; // Выход за пределы интервала
+                    break;
                 }
             }
 
@@ -118,16 +118,16 @@ vector<double> newton_method() {
         if (f(left) * f(left + delta) < 0) {
             for (int i = 0; i < 100; ++i) {
                 if (df(x_n) == 0.0)
-                    break; // Избегаем деления на ноль
+                    break;
 
                 double x_n1 = x_n - f(x_n) / df(x_n);
 
                 if (fabs(x_n1 - x_n) < delta && find(roots.begin(), roots.end(), x_n1) == roots.end()) {
-                    roots.push_back(x_n1); // Добавляем найденный корень
-                    break; // Выходим из цикла
+                    roots.push_back(x_n1);
+                    break;
                 }
 
-                x_n = x_n1; // Обновляем текущее значение
+                x_n = x_n1;
             }
         }
     }
@@ -135,32 +135,28 @@ vector<double> newton_method() {
     return roots;
 }
 
-// Метод секущих для нахождения всех корней
 vector<double> secant_method() {
     vector<double> roots;
 
     for (double left = a; left < b; left += delta) {
         double right = left + delta;
 
-        if (f(left) * f(right) < 0) { // Проверяем наличие корня в интервале
+        if (f(left) * f(right) < 0) {
             double x0 = left;
             double x1 = right;
             double x2;
 
             while (true) {
-                if (f(x1) == f(x0)) break; // Избегаем деления на ноль
+                if (f(x1) == f(x0)) break;
 
-                // Вычисляем новое приближение по методу секущих
                 x2 = x1 - f(x1) * (x1 - x0) / (f(x1) - f(x0));
 
                 if (fabs(f(x2)) < delta || fabs(x2 - x1) < delta || fabs(f(x2)) < delta)
                     break;
 
-                // Обновляем значения для следующей итерации
                 x0 = x1;
                 x1 = x2;
 
-                // Проверка выхода за пределы интервала
                 if (x2 < a || x2 > b || isnan(x2)) break;
             }
 
