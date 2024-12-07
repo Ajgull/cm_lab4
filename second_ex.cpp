@@ -28,7 +28,7 @@ void simpleIteration(double& x, double& y) {
         newX = max(0.0, min(1.0, newX));
         newY = max(0.0, min(1.0, newY));
 
-        if (fabs(newX - x) < EPSILON && fabs(newY - y) < EPSILON)
+        if (fabs(newX - x) < delta && fabs(newY - y) < delta)
             break;
 
         x = newX;
