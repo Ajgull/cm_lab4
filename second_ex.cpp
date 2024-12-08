@@ -1,8 +1,5 @@
 #include "constants.h"
 
-
-const double EPSILON = 1e-3;
-
 double F(double x, double y) {
     return 1 - (pow(x, 2) - 1) * (pow(y, 2) - 1) * (x * exp(y) + y * exp(x));
 }
