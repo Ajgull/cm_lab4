@@ -19,7 +19,7 @@ double dFdy(double x, double y) {
 void simpleIteration(double& x, double& y) {
     double newX, newY;
     do {
-        newX = x +fabs( exp(-y) * dFdx(x, y) / (80  ));
+        newX = x +fabs( exp(-y) * dFdx(x, y) / (80));
         newY = y + fabs( exp(-x) * dFdy(x, y) / (90));
 
         newX = max(0.0, min(1.0, newX));
