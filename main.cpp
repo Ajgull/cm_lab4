@@ -6,6 +6,7 @@ void second();
 
 int main()
 {
-    second();
+    first();
+    //second();
 }
 

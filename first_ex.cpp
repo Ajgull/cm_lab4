@@ -1,7 +1,7 @@
 #include "constants.h"
 
 double f(double x) {
-    double temp = 1 - 2 * x * cos(x);
+    double temp = 20 * (log(2 + cos(x))) - x - 10;
     return temp;
 }
 
@@ -10,7 +10,7 @@ double g(double x) {
 }
 
 double df(double x) {
-    return -2 * (cos(x) - x * sin(x));
+    return -(20 * sin(x) / (3 + cos(x)) - 1);
 }
 
 vector<double> dichotomy_method() {
